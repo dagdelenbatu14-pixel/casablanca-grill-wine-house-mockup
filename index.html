@@ -71,6 +71,13 @@ section { padding: clamp(80px, 14vw, 160px) 0; }
 .brand small { display: block; font-family: var(--f-body); font-weight: 400; font-size: .62rem; letter-spacing: .32em; text-transform: uppercase; color: var(--gold); margin-top: 6px; }
 .nav__cta { font-size: .78rem; padding: 11px 26px; background: var(--wine); color: var(--paper); text-decoration: none; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; border-radius: 0; margin-left: 16px; border: 1px solid var(--wine); transition: background .2s ease; }
 .nav__cta:hover { background: var(--wine-deep); }
+.nav__actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+.nav__actions .nav__cta { margin-left: 0; }
+.lang { display: inline-flex; align-items: center; gap: 8px; }
+.lang button { font-size: .74rem; padding: 8px 12px; border: 1px solid var(--line); background: transparent; color: rgba(26,26,26,.58); cursor: pointer; letter-spacing: .12em; text-transform: uppercase; font-family: var(--f-body); }
+.lang button.is-active { background: var(--forest); color: var(--paper); border-color: var(--forest); }
+.nav__social { font-size: .78rem; padding: 10px 18px; color: var(--forest); text-decoration: none; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; border: 1px solid var(--line); transition: background .2s ease, color .2s ease, border-color .2s ease; }
+.nav__social:hover { background: var(--forest); color: var(--paper); border-color: var(--forest); }
 
 .hero { padding: clamp(80px, 14vw, 160px) 0 clamp(80px, 12vw, 140px); background:
   radial-gradient(circle at 88% 12%, rgba(184,137,63,.15), transparent 55%),
@@ -197,6 +204,8 @@ section { padding: clamp(80px, 14vw, 160px) 0; }
 .reveal.in { opacity: 1; transform: none; }
 
 @media (max-width: 900px) {
+  .nav__inner { align-items: flex-start; gap: 16px; }
+  .nav__actions { max-width: 62%; }
   .pillars__grid, .reviews__grid { grid-template-columns: 1fr; }
   .about__grid { grid-template-columns: 1fr; }
   .hero__meta { grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -204,6 +213,11 @@ section { padding: clamp(80px, 14vw, 160px) 0; }
   .gallery__grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
   .gallery__item, .gallery__item.big { grid-column: span 1; grid-row: span 1; height: 200px; }
   .gallery__item.big { grid-column: span 2; height: 260px; }
+}
+@media (max-width: 640px) {
+  .nav__inner { flex-direction: column; align-items: stretch; }
+  .nav__actions { max-width: none; justify-content: flex-start; }
+  .nav__cta, .nav__social { padding: 10px 14px; font-size: .72rem; }
 }
 @media (prefers-reduced-motion: reduce) { *, ::before, ::after { transition: none !important; } }
 </style>
@@ -213,7 +227,14 @@ section { padding: clamp(80px, 14vw, 160px) 0; }
 <header class="nav">
   <div class="wrap nav__inner">
     <a class="brand" href="#top">Casablanca<small>Grill & Wine House · Gümbet</small></a>
-    <a class="nav__cta" href="https://wa.me/905533052053" target="_blank" rel="noopener">Rezervasyon</a>
+    <div class="nav__actions">
+      <div class="lang" aria-label="Dil seçimi">
+        <button type="button" class="is-active" data-lang-btn="tr">TR</button>
+        <button type="button" data-lang-btn="en">EN</button>
+      </div>
+      <a class="nav__cta" href="https://wa.me/905533052053" target="_blank" rel="noopener">Rezervasyon</a>
+      <a class="nav__social" href="https://www.instagram.com/casablancagrillhouse/" target="_blank" rel="noopener">Instagram</a>
+    </div>
   </div>
 </header>
 
@@ -1126,6 +1147,7 @@ section { padding: clamp(80px, 14vw, 160px) 0; }
     <p>Hafta sonları erken doluyoruz. WhatsApp üzerinden mesaj atın — masa ve saat birlikte bakalım.</p>
     <div class="cta-row" style="justify-content:center;">
       <a class="btn btn-primary" href="https://wa.me/905533052053" target="_blank" rel="noopener">Mesajla Rezervasyon</a>
+      <a class="btn btn-ghost" href="https://www.instagram.com/casablancagrillhouse/" target="_blank" rel="noopener">Instagram</a>
       <a class="btn btn-ghost" href="tel:+905533052053">Telefonla Ara · 0553 305 20 53</a>
       <a class="btn btn-ghost" href="https://maps.google.com/?q=Casablanca+Grill+Wine+House+Gumbet+Bodrum" target="_blank" rel="noopener">Yol Tarifi</a>
     </div>
@@ -1144,6 +1166,138 @@ const io = new IntersectionObserver((es) => {
   es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+const translations = new Map([
+  [`Rezervasyon`, `Reservation`],
+  [`Gümbet · Bodrum · "Eat Meat Repeat"`, `Gumbet · Bodrum · "Eat Meat Repeat"`],
+  [`Et, <em>şarap</em> ve Akdeniz akşamı.`, `Steak, <em>wine</em> and a Mediterranean evening.`],
+  [`Bodrum Gümbet'te ızgaranın, şarabın ve sakin bir gecenin buluştuğu ev. Açık ateş üzerinde bonfile, geniş şarap kartı ve gece 02:00'a kadar süren bir Akdeniz akşamı.`, `A home in Bodrum Gumbet where the grill, wine and a calm night meet. Tenderloin over open fire, a broad wine list and a Mediterranean evening that lasts until 02:00.`],
+  [`Masa Ayırt`, `Book a Table`],
+  [`Menüyü Gör`, `View Menu`],
+  [`Açık`, `Open`],
+  [`Mutfak`, `Cuisine`],
+  [`Akdeniz · Grill`, `Mediterranean · Grill`],
+  [`Puan`, `Rating`],
+  [`Yorum`, `Reviews`],
+  [`Gümbet · Bodrum, 48400`, `Gumbet · Bodrum, 48400`],
+  [`Bir akşam, bir şişe şarap, ızgaradan dumanlı bir tabak.`, `An evening, a bottle of wine, a smoky plate from the grill.`],
+  [`Gümbet'in koşuşturmasının arasında — sakin, ferah, kaliteli müzikli bir ev.`, `A calm, airy home with quality music in the middle of Gumbet's bustle.`],
+  [`Konsept`, `Concept`],
+  [`Üç <em>ev,</em> tek bir akşam.`, `Three <em>houses,</em> one evening.`],
+  [`Izgara, şarap ve Akdeniz mezesi — Casablanca'nın üç temel halini birleştiriyor.`, `Grill, wine and Mediterranean mezze: the three pillars of Casablanca in one night.`],
+  [`Açık ateş, dana bonfile, T-bone, kuzu pirzola ve imza Casablanca Mix Grill.`, `Open fire, beef tenderloin, T-bone, lamb chops and the signature Casablanca Mix Grill.`],
+  [`Prime bonfile · 400g`, `Prime tenderloin · 400g`],
+  [`Bone-in ribeye antrikot`, `Bone-in ribeye steak`],
+  [`Kuzu pirzola · ızgara`, `Grilled lamb chops`],
+  [`Türkiye ve Akdeniz şarapları, geniş cam-kadeh seçkisi, şefin eşleştirme önerileri.`, `Turkish and Mediterranean wines, a broad by-the-glass selection and pairing ideas from the chef.`],
+  [`TR · Bodrum · Ege seçkisi`, `Turkey · Bodrum · Aegean selection`],
+  [`Akdeniz şarapları`, `Mediterranean wines`],
+  [`Cam ile kırmızı / beyaz / rosé`, `Red / white / rose by the glass`],
+  [`Şefin eşleştirme önerisi`, `Chef's pairing suggestion`],
+  [`Akdeniz Mutfağı`, `Mediterranean Kitchen`],
+  [`Mezeler, salatalar, taze deniz mahsulleri, sıcak tava ve fırın güveçleri.`, `Mezze, salads, fresh seafood, hot pans and oven-baked casseroles.`],
+  [`Türk mezze tabağı`, `Turkish mezze plate`],
+  [`Izgara levrek · çipura · somon`, `Grilled sea bass · sea bream · salmon`],
+  [`Ahtapot · güveç ve ızgara`, `Octopus · casserole and grilled`],
+  [`Sıcak tava seçkisi`, `Hot pan selection`],
+  [`Menü · Food Menu`, `Food Menu`],
+  [`Şefin <em>menüsü.</em>`, `The chef's <em>menu.</em>`],
+  [`Kahvaltıdan steakhouse'a, mezeden tatlıya — tüm seçkimiz <em>iki dilli</em> aşağıda.`, `From breakfast to steakhouse plates, mezze to desserts, explore the full selection below.`],
+  [`Hakkımızda`, `About Us`],
+  [`Gümbet'in <em style="font-style:italic; color:var(--gold); font-weight:400;">sakin</em> köşesi.`, `Gumbet's <em style="font-style:italic; color:var(--gold); font-weight:400;">calm</em> corner.`],
+  [`Casablanca, Gümbet'in ortasında — kalabalığın hemen yanında ama sessiz, ferah ve nezih bir köşe. Açık ateşte ızgara, geniş bir şarap kartı ve Akdeniz mutfağının ev hali bir araya geliyor.`, `Casablanca sits in the middle of Gumbet: close to the crowd, yet quiet, airy and refined. Open-fire grilling, a broad wine list and home-style Mediterranean cooking come together here.`],
+  [`Misafirlerimizin söylediği gibi: <em>"fiyatlar çok uygun, personel çok ilgili, sessiz ve sakin bir ortam, fonda çalan müzikler kaliteli."</em> Sabah kahveden gece yarısı sonrası şaraba kadar — gün boyu açığız.`, `As our guests say: <em>"fair prices, caring staff, a quiet and calm atmosphere, and quality music in the background."</em> From morning coffee to late-night wine, we are open all day.`],
+  [`Bu Sezon · Yaz 2026`, `This Season · Summer 2026`],
+  [`Açılış`, `Opening`],
+  [`Kapanış`, `Closing`],
+  [`Misafir profili`, `Guest Profile`],
+  [`Telefon`, `Phone`],
+  [`Mekan`, `Venue`],
+  [`Casablanca'dan <em>birkaç kare.</em>`, `A few frames <em>from Casablanca.</em>`],
+  [`Cepheden tabağa, şişeden ışığa — birazdan burada.`, `From the facade to the plate, bottle to light: soon, right here.`],
+  [`Daha fazlası için → <a href="https://www.instagram.com/casablancagrillhouse/" target="_blank" rel="noopener">@casablancagrillhouse</a>`, `For more → <a href="https://www.instagram.com/casablancagrillhouse/" target="_blank" rel="noopener">@casablancagrillhouse</a>`],
+  [`Google Yorumları`, `Google Reviews`],
+  [`Misafirlerimiz <em>ne söyledi.</em>`, `What our guests <em>said.</em>`],
+  [`66+ değerlendirme, 4.8 ortalama — birkaç söz aşağıda.`, `66+ reviews, 4.8 average. A few words below.`],
+  [`"Çok memnun kaldık, fiyatlar aşırı uygun. Personel çok ilgili. Temiz ve yemekleri lezzetli. Sessiz, sakin, rahat bir ortam. Fonda çalan müzikler kaliteli ve dingin. Pişman olmazsınız."`, `"We were very pleased. Prices are very fair, the staff is caring, the place is clean and the food is delicious. Quiet, calm and comfortable, with quality music in the background."`],
+  [`"Cumartesi gecesi alelade gezerken bu mekana denk geldik, ışıklandırması hoşumuza gitti. Bize özel hazırlanan makarnalar harikaydı — geç saatte bile özen gördük."`, `"We came across this place on a Saturday night and liked the lighting. The pasta prepared specially for us was wonderful, and we were well looked after even late at night."`],
+  [`"Tatilim boyunca sabahları kahve içmeye geldiğim mekan. Güzel atmosfer, Bodrum'un kalanına kıyasla çok daha rahat hissedebileceğiniz ferah bir yer. Çalışanlar yardımcı, sakin ve nezih."`, `"I came here for coffee throughout my holiday. Great atmosphere, airy and much more relaxed than the rest of Bodrum. Helpful staff, calm and refined."`],
+  [`66+ Google Yorumu`, `66+ Google Reviews`],
+  [`Bu akşam <em>masanızı</em> ayırtın.`, `Book <em>your table</em> tonight.`],
+  [`Hafta sonları erken doluyoruz. WhatsApp üzerinden mesaj atın — masa ve saat birlikte bakalım.`, `Weekends fill up early. Message us on WhatsApp and we will find the right table and time together.`],
+  [`Mesajla Rezervasyon`, `Reserve by Message`],
+  [`Telefonla Ara · 0553 305 20 53`, `Call · 0553 305 20 53`],
+  [`Yol Tarifi`, `Directions`]
+]);
+
+function translateStatic(lang) {
+  document.querySelectorAll('h1, h2, h3, p, span, small, dt, dd, li, a, .gallery__cta, footer, strong').forEach((el) => {
+    if (el.closest('.menu-block')) return;
+    if (!el.dataset.trHtml) el.dataset.trHtml = el.innerHTML.trim();
+    const next = lang === 'en' ? translations.get(el.dataset.trHtml) : el.dataset.trHtml;
+    if (next) el.innerHTML = next;
+  });
+}
+
+function translateMenu(lang) {
+  document.querySelectorAll('.menu-block__head').forEach((head) => {
+    const title = head.querySelector('h3');
+    const subtitle = head.querySelector('span');
+    if (!title || !subtitle) return;
+    if (!title.dataset.trHtml) title.dataset.trHtml = title.innerHTML.trim();
+    if (!title.dataset.enText) title.dataset.enText = subtitle.textContent.trim();
+    title[lang === 'en' ? 'textContent' : 'innerHTML'] = lang === 'en' ? title.dataset.enText : title.dataset.trHtml;
+    subtitle.hidden = true;
+  });
+
+  document.querySelectorAll('.menu-block__note').forEach((note) => {
+    if (!note.dataset.trHtml) {
+      note.dataset.trHtml = note.innerHTML.trim();
+      const en = note.querySelector('em');
+      note.dataset.enHtml = en ? en.innerHTML.trim() : note.dataset.trHtml;
+    }
+    note.innerHTML = lang === 'en' ? note.dataset.enHtml : note.dataset.trHtml;
+  });
+
+  document.querySelectorAll('.menu-block > .m-en').forEach((label) => {
+    if (!label.dataset.trHtml) {
+      label.dataset.trHtml = label.innerHTML.trim();
+      const parts = label.textContent.replace(/—/g, '').split('·').map((part) => part.trim()).filter(Boolean);
+      label.dataset.enHtml = parts.length > 1 ? `— ${parts[1]} —` : label.dataset.trHtml;
+    }
+    label.innerHTML = lang === 'en' ? label.dataset.enHtml : label.dataset.trHtml;
+  });
+
+  document.querySelectorAll('.m-item').forEach((item) => {
+    const title = item.querySelector('h4');
+    const enTitle = item.querySelector(':scope > .m-en');
+    const trDesc = item.querySelector(':scope > .m-desc');
+    const enDesc = item.querySelector(':scope > .m-desc-en');
+    if (title && !title.dataset.trHtml) title.dataset.trHtml = title.innerHTML.trim();
+    if (title && enTitle) {
+      if (lang === 'en') title.textContent = enTitle.textContent.trim();
+      else title.innerHTML = title.dataset.trHtml;
+    }
+    if (enTitle) enTitle.hidden = true;
+    if (trDesc) trDesc.hidden = lang === 'en';
+    if (enDesc) enDesc.hidden = lang !== 'en';
+  });
+}
+
+function setLanguage(lang) {
+  document.documentElement.lang = lang;
+  translateStatic(lang);
+  translateMenu(lang);
+  document.querySelectorAll('[data-lang-btn]').forEach((button) => {
+    button.classList.toggle('is-active', button.dataset.langBtn === lang);
+  });
+  localStorage.setItem('casablanca-language', lang);
+}
+
+document.querySelectorAll('[data-lang-btn]').forEach((button) => {
+  button.addEventListener('click', () => setLanguage(button.dataset.langBtn));
+});
+setLanguage(localStorage.getItem('casablanca-language') || 'tr');
 </script>
 </body>
 </html>
